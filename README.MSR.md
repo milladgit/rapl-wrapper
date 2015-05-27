@@ -6,35 +6,36 @@ Infomation about the CPUs and MSRs
 /proc/cpuinfo:
 --------------
 
-	This is a textual file that contains detailed information about the CPU, its cores and so many other valuable info.
+This is a textual file that contains detailed information about the CPU, its cores and so many other valuable info.
 
 
 
 MSRs:
 -----
 
-	MSR directories could be found at the following addresses. By opening these files, we can get access to MSRs. 
+MSR directories could be found at the following addresses. By opening these files, we can get access to MSRs. 
 
-		/dev/cpu/[CPUNUM]/msr
+    /dev/cpu/[CPUNUM]/msr
 
 	
-	You should be root or be a member of group root.
+You should be root or be a member of group root.
 
-	To load the driver, run following command:
+To load the driver, run following command:
 
-		modprobe msr
+    modprobe msr
 
-	Also note that if you do not have the MSR access at all, it is better to install following package:
 
-		apt-get install msr-tools
+Also note that if you do not have the MSR access at all, it is better to install following package:
 
-	To see whether your linux supports the MSR or not, use following command:
+    apt-get install msr-tools
 
-		cat /boot/config-<some_numbers> | grep MSR
+To see whether your linux supports the MSR or not, use following command:
 
-	and if you see something like this, you have the MSR support. Otherwise, you should recompile the kernel.
+    cat /boot/config-<some_numbers> | grep MSR
+
+and if you see something like this, you have the MSR support. Otherwise, you should recompile the kernel.
 	
-		CONFIG_X86_MSR=m (or y)
+    CONFIG_X86_MSR=m (or y)
 
 
 
