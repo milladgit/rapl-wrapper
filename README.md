@@ -19,6 +19,8 @@ How to use
 
 In order to find out how to use this library (as an object file), please take a look at the Makefile at example folder (example/Makefile).
 
+Please also keep in mind that you should have a root access in order to run the final executable file. MSRs need kernel access. It seems that if your user is a member of the root group, you can also access MSRs too.
+
 Structures
 ----------
 
