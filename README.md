@@ -29,7 +29,7 @@ easily. Some of the structures are presented in here.
 PETU_t structure
 ----------------
 
-```
+```C
 typedef struct PETU {
 	double power_units;			// in Watts
 	double energy_units;		// in Joules
@@ -41,7 +41,7 @@ PETU_t represents power, energy, and time units that are used extensively by MSR
 
 PackagePowerInfo_t
 ------------------
-```
+```C
 typedef struct PackagePowerInfo {
 	double thermal_spec_power;	// in Watts
 	double minimum_power;		// in Watts
@@ -54,7 +54,7 @@ This structure is used for output of getting power info about packages.
 
 PackagePowerLimit_t
 -------------------
-```
+```C
 typedef struct PackagePowerLimit {
 	int power_limit_is_locked;	// 1 = locked  ---  0 = unlocked
 	double pkg_power_limit_1;	// in Watts
@@ -73,7 +73,7 @@ This structure is used for output of getting power limitations in packages.
 
 PowerPlane_EnergyPolicy_t
 -------------------------
-```
+```C
 typedef struct PowerPlane_EnergyPolicy {
 	double energy;					// in Joules
 	int policy;
@@ -94,5 +94,5 @@ There is simple example on how to use this package at example/ folder. Please ta
 
 Contact
 -------
-If you have any questions regarding these codes, please send me an email to <mghane2 at uh.edu>.
+If you have any questions regarding these codes, please send me an email to mghane2 at uh.edu.
 
