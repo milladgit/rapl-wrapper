@@ -1,7 +1,7 @@
 RAPL wrapper for Intel Processors using MSRs
 ============================================
 
-This project is mainly based on the code written by Vince Weaver, and known as rapl-read.c file.
+This project is mainly based on the code written by Vince Weaver, AKA rapl-read.c file.
 
 I tried to make it a little bit more function-oriented in order to use it in my research. Therefore, I began to represent everything as functions. Keep in mind that I wrapped the codes in the RAPL-read file with functions and did nothing systematically.
 
