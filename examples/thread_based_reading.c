@@ -1,7 +1,7 @@
 /*
  * f1.c
  *
- *  Created on: May 26, 2015
+ *  Created on: Oct 04, 2016
  *      Author: millad
  */
 
@@ -31,6 +31,36 @@ void computation() {
 
 }
 
+
+static struct timeval tv1, tv2;
+static double en0, en1;
+
+static int core0;
+static PETU_t pet0;
+
+static int exiting = 0;
+
+
+void *measuring_code() {
+
+	while(!exiting) {
+		gettimeofday(&tv2, NULL);
+		double duration_in_us = (tv2.tv_sec - tv1.tv_sec) * 1.0E6 + (tv2.tv_usec - tv1.tv_usec);
+		en1 = msr_get_package_energy(core0, &pet0);
+
+		double delta_e = en1 - en0;
+
+		en1 = en0;
+		tv2 = tv1;
+
+		printf("--- Power: %.3f\n", delta_e / duration_in_us * 1E6);
+
+		usleep(50000);
+	}
+
+	return NULL;
+}
+
 int main() {
 	int cpu_model = detect_cpu();
 	if (cpu_model < 0) {
@@ -38,40 +68,40 @@ int main() {
 		return -1;
 	}
 
+
 	printf("CPU Model: %d\n", cpu_model);
 
-	int core0 = msr_open(0);
-	int core1 = msr_open(1);
+	core0 = msr_open(0);
 
-	PETU_t pet0 = msr_calculate_units(core0);
-	PETU_t pet1 = msr_calculate_units(core1);
+	pet0 = msr_calculate_units(core0);
 
 	PackagePowerInfo_t ppi0 = msr_get_package_power_info(core0, &pet0);
-	PackagePowerInfo_t ppi1 = msr_get_package_power_info(core1, &pet1);
 
 	printf("PP Core 0: %.3f %.3f\n", ppi0.minimum_power, ppi0.maximum_power);
-	printf("PP Core 1: %.3f %.3f\n", ppi1.minimum_power, ppi1.maximum_power);
+
+
+
+	gettimeofday(&tv1, NULL);
+	en0 = msr_get_package_energy(core0, &pet0);
+
+	pthread_t th;
+	pthread_create(&th, NULL, measuring_code, NULL);
+
+
 
 	printf("Computation begins\n");
 	double e0 = msr_get_package_energy(core0, &pet0);
-	double e1 = msr_get_package_energy(core1, &pet1);
 
-	struct timeval monitor_time_tv_start, monitor_time_tv_stop;
-
-	gettimeofday(&monitor_time_tv_start, NULL);
 	computation();
-	gettimeofday(&monitor_time_tv_stop, NULL);
 
 	e0 = msr_get_package_energy(core0, &pet0) - e0;
-	e1 = msr_get_package_energy(core1, &pet1) - e1;
 	printf("Computation ends\n");
 
 	printf("Energy consumed: Core 0: %.3fJ\n", e0);
-	printf("Energy consumed: Core 1: %.3fJ\n", e1);
 
-	double duration_in_us = (monitor_time_tv_stop.tv_sec - monitor_time_tv_start.tv_sec) * 1.0E6 + (monitor_time_tv_stop.tv_usec - monitor_time_tv_start.tv_usec);
-	printf("Time (seconds): %.3f\n", duration_in_us * 1E-6);
-	printf("Power: %.3f\n", (e0) / duration_in_us * 1E6);
+
+	exiting = 1;
+	pthread_join(th, NULL);
 
 	return 0;
 }
